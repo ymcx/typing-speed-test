@@ -1,4 +1,6 @@
 #include "logic.h"
+#include "stats.h"
+#include <cctype>
 #include <ftxui/component/screen_interactive.hpp>
 
 using namespace std;
@@ -13,40 +15,39 @@ bool decrease_time(Stats *stats) {
   return false;
 }
 
-void play_again(Stats *stats) { stats->reset(); }
+void play_again(Stats &stats) { stats.reset(); }
 
-void close(ScreenInteractive *screen) { screen->Exit(); }
+void close(ScreenInteractive &screen) { screen.Exit(); }
 
-bool handle_key(Stats *stats, Component *popup_buttons, Event *event,
-                ScreenInteractive *screen) {
-  if (stats->show_popup)
-    return (*popup_buttons)->OnEvent(*event);
+bool handle_key(Stats &stats, Component &popup_buttons, Event &event,
+                ScreenInteractive &screen) {
+  if (stats.show_popup)
+    return popup_buttons->OnEvent(event);
 
-  if (*event == Event::Backspace) {
-    if (!stats->typed_text.empty())
-      stats->typed_text.pop_back();
-    stats->last_key = '\0';
+  if (event == Event::Backspace) {
+    if (!stats.typed_text.empty())
+      stats.typed_text.pop_back();
+    stats.last_key = '\0';
     return true;
   }
-  if (*event == Event::Escape) {
+  if (event == Event::Escape) {
     close(screen);
     return true;
   }
 
-  if (*event == Event::Return) {
-    if (stats->lines[stats->line] == stats->typed_text) {
-      stats->keypresses += stats->lines[stats->line].length();
-      stats->line += 1;
-      stats->typed_text = "";
+  if (event == Event::Return) {
+    if (stats.lines[stats.line] == stats.typed_text) {
+      stats.line += 1;
+      stats.typed_text = "";
     }
-    stats->last_key = '\0';
+    stats.last_key = '\0';
     return true;
   }
 
-  if (event->is_character()) {
-    char c = event->character()[0];
-    stats->typed_text += c;
-    stats->last_key = c;
+  if (event.is_character()) {
+    char c = event.character()[0];
+    stats.typed_text += c;
+    stats.last_key = toupper(c);
     return true;
   }
 

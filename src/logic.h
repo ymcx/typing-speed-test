@@ -12,9 +12,9 @@ using namespace ftxui;
 
 bool decrease_time(Stats *stats);
 
-void play_again(Stats *stats);
+void play_again(Stats &stats);
 
-void close(ScreenInteractive *screen);
+void close(ScreenInteractive &screen);
 
-bool handle_key(Stats *stats, Component *popup_buttons, Event *event,
-                ScreenInteractive *screen);
+bool handle_key(Stats &stats, Component &popup_buttons, Event &event,
+                ScreenInteractive &screen);

@@ -7,10 +7,8 @@
 using namespace std;
 
 struct Stats {
-  int keypresses = 0;
   bool show_popup = false;
   vector<string> lines;
-  int score = 0;
   int line = 0;
   string typed_text = "";
   char last_key = '\0';
@@ -19,10 +17,18 @@ struct Stats {
   Stats(string arg, int time)
       : lines(read_lines(arg)), timeleft(time), ogtime(time) {}
 
+  int calculate_score() {
+    int keypresses = 0;
+    for (int i = 0; i < line; ++i) {
+      keypresses += lines[i].length();
+    }
+    keypresses += longest_common(typed_text, lines[line]);
+
+    return 60 * keypresses / ogtime;
+  }
+
   void reset() {
-    keypresses = 0;
     show_popup = false;
-    score = 0;
     line = 0;
     typed_text = "";
     last_key = '\0';
