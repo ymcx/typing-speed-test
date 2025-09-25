@@ -1,6 +1,5 @@
 #pragma once
 
-#include "stats.h"
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <string>
@@ -9,7 +8,7 @@
 using namespace std;
 using namespace ftxui;
 
-Component popup_buttons(Stats &stats, ScreenInteractive &screen);
+Component popup_buttons(function<void()> pa, function<void()> cl);
 Element popup(int score, Component &buttons);
 Element text_previous_next(vector<string> &lines, int i);
 Element text_current(vector<string> &lines, int i, string typed);

@@ -1,6 +1,5 @@
 #include "logic.h"
 #include "misc.h"
-#include "stats.h"
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <string>
@@ -9,9 +8,9 @@
 using namespace std;
 using namespace ftxui;
 
-Component popup_buttons(Stats &stats, ScreenInteractive &screen) {
-  Component button1 = Button("Play Again", [&] { play_again(stats); });
-  Component button2 = Button("Quit", [&] { quit(screen); });
+Component popup_buttons(function<void()> pa, function<void()> cl) {
+  Component button1 = Button("Play Again", pa);
+  Component button2 = Button("Quit", cl);
 
   return Container::Horizontal({button1, button2});
 }

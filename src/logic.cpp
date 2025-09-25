@@ -1,58 +1,62 @@
 #include "logic.h"
-#include "stats.h"
+#include "misc.h"
 #include <cctype>
 #include <ftxui/component/screen_interactive.hpp>
 
 using namespace std;
 using namespace ftxui;
 
-bool decrease_time(Stats *stats) {
-  if (stats->timeleft > 0) {
-    stats->timeleft -= 1;
-    return true;
-  }
+void play_again(vector<string> &lines, bool &show_popup, int &line,
+                string &typed, char &last_key, int &time_left) {
+  line = 0;
+  typed = "";
+  last_key = '\0';
+  time_left = 60;
 
-  return false;
-}
-
-void play_again(Stats &stats) {
-  stats.reset();
-  // shuffle(lines);
+  shuffle(lines);
+  show_popup = false;
 }
 
 void quit(ScreenInteractive &screen) { screen.Exit(); }
 
-bool handle_key(Stats &stats, Component &popup_buttons, Event &event,
-                ScreenInteractive &screen, string line) {
-  if (stats.show_popup)
+void delete_char(string &typed, char &last_key) {
+  if (!typed.empty())
+    typed.pop_back();
+  last_key = '\0';
+}
+
+void next_line(string line, string &typed, int &line_num, char &last_key) {
+  if (line == typed) {
+    line_num += 1;
+    typed = "";
+  }
+  last_key = '\0';
+}
+
+void add_character(string &typed, char &last_key, Event &event) {
+  char c = event.character()[0];
+  typed += c;
+  last_key = toupper(c);
+}
+
+bool handle_key(Component &popup_buttons, Event &event,
+                ScreenInteractive &screen, string line, bool show_popup,
+                string &typed, char &last_key, int &line_num) {
+  if (show_popup) {
     return popup_buttons->OnEvent(event);
+  }
 
   if (event == Event::Backspace) {
-    if (!stats.typed_text.empty())
-      stats.typed_text.pop_back();
-    stats.last_key = '\0';
-    return true;
-  }
-  if (event == Event::Escape) {
+    delete_char(typed, last_key);
+  } else if (event == Event::Escape) {
     quit(screen);
-    return true;
+  } else if (event == Event::Return) {
+    next_line(line, typed, line_num, last_key);
+  } else if (event.is_character()) {
+    add_character(typed, last_key, event);
+  } else {
+    return false;
   }
 
-  if (event == Event::Return) {
-    if (line == stats.typed_text) {
-      stats.line += 1;
-      stats.typed_text = "";
-    }
-    stats.last_key = '\0';
-    return true;
-  }
-
-  if (event.is_character()) {
-    char c = event.character()[0];
-    stats.typed_text += c;
-    stats.last_key = toupper(c);
-    return true;
-  }
-
-  return false;
+  return true;
 }

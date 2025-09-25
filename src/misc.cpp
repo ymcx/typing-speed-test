@@ -33,8 +33,29 @@ int common_prefix_length(string a, string b) {
   for (int i = 0; i < length_max; ++i) {
     if (a[i] == b[i]) {
       ++length;
+    } else {
+      return length;
     }
   }
 
   return length;
+}
+
+int calculate_score(const vector<string> &lines, int line, string typed) {
+  int keypresses = 0;
+  for (int i = 0; i < line; ++i) {
+    keypresses += lines[i].length();
+  }
+  keypresses += common_prefix_length(typed, lines[line]);
+
+  return keypresses;
+}
+
+bool decrease_time(int &time_left) {
+  if (time_left > 0) {
+    --time_left;
+    return true;
+  }
+
+  return false;
 }
