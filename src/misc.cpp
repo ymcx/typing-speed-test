@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void shuffle(vector<string> &vector) {
+void shuffle_vector(vector<string> &vector) {
   random_device rd;
   mt19937 g(rd());
   shuffle(vector.begin(), vector.end(), g);
@@ -31,24 +31,23 @@ int common_prefix_length(string a, string b) {
   int length = 0;
   int length_max = min(a.length(), b.length());
   for (int i = 0; i < length_max; ++i) {
-    if (a[i] == b[i]) {
-      ++length;
-    } else {
-      return length;
+    if (a[i] != b[i]) {
+      break;
     }
+    ++length;
   }
 
   return length;
 }
 
 int calculate_score(const vector<string> &lines, int line, string typed) {
-  int keypresses = 0;
+  int characters = 0;
   for (int i = 0; i < line; ++i) {
-    keypresses += lines[i].length();
+    characters += lines[i].length();
   }
-  keypresses += common_prefix_length(typed, lines[line]);
+  characters += common_prefix_length(typed, lines[line]);
 
-  return keypresses;
+  return characters;
 }
 
 bool decrease_time(int &time_left) {

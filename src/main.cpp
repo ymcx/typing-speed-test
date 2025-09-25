@@ -17,9 +17,9 @@ int main(int argc, char *argv[]) {
 
   string file = argv[1];
   vector<string> lines = read_lines(file);
-  shuffle(lines);
+  shuffle_vector(lines);
   string typed = "";
-  int time_left = 6;
+  int time_left = 60;
   int line = 0;
   char last_key = '\0';
 

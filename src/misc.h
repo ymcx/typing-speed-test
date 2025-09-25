@@ -5,7 +5,7 @@
 
 using namespace std;
 
-void shuffle(vector<string> &vector);
+void shuffle_vector(vector<string> &vector);
 vector<string> read_lines(string path);
 int common_prefix_length(string a, string b);
 int calculate_score(const vector<string> &lines, int line, string typed);
