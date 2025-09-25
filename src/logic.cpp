@@ -15,12 +15,15 @@ bool decrease_time(Stats *stats) {
   return false;
 }
 
-void play_again(Stats &stats) { stats.reset(); }
+void play_again(Stats &stats) {
+  stats.reset();
+  // shuffle(lines);
+}
 
 void quit(ScreenInteractive &screen) { screen.Exit(); }
 
 bool handle_key(Stats &stats, Component &popup_buttons, Event &event,
-                ScreenInteractive &screen) {
+                ScreenInteractive &screen, string line) {
   if (stats.show_popup)
     return popup_buttons->OnEvent(event);
 
@@ -36,7 +39,7 @@ bool handle_key(Stats &stats, Component &popup_buttons, Event &event,
   }
 
   if (event == Event::Return) {
-    if (stats.lines[stats.line] == stats.typed_text) {
+    if (line == stats.typed_text) {
       stats.line += 1;
       stats.typed_text = "";
     }

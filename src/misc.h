@@ -5,6 +5,6 @@
 
 using namespace std;
 
+void shuffle(vector<string> &vector);
 vector<string> read_lines(string path);
-
-int longest_common(string a, string b);
+int common_prefix_length(string a, string b);

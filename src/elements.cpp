@@ -35,7 +35,7 @@ Element text_previous_next(vector<string> &lines, int i) {
 Element text_current(vector<string> &lines, int i, string typed) {
   string line = lines[i];
 
-  int correct_amount = longest_common(typed, line);
+  int correct_amount = common_prefix_length(typed, line);
   int typed_amount = typed.length();
 
   string correct = line.substr(0, correct_amount);

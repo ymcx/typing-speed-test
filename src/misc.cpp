@@ -6,6 +6,12 @@
 
 using namespace std;
 
+void shuffle(vector<string> &vector) {
+  random_device rd;
+  mt19937 g(rd());
+  shuffle(vector.begin(), vector.end(), g);
+}
+
 vector<string> read_lines(string path) {
   vector<string> lines;
   string line;
@@ -18,21 +24,17 @@ vector<string> read_lines(string path) {
     file.close();
   }
 
-  random_device rd;
-  mt19937 g(rd());
-  shuffle(lines.begin(), lines.end(), g);
-
   return lines;
 }
 
-int longest_common(string a, string b) {
-
-  int longest = 0;
-  int len = min(a.length(), b.length());
-  for (int i = 0; i < len; ++i) {
+int common_prefix_length(string a, string b) {
+  int length = 0;
+  int length_max = min(a.length(), b.length());
+  for (int i = 0; i < length_max; ++i) {
     if (a[i] == b[i]) {
-      ++longest;
+      ++length;
     }
   }
-  return longest;
+
+  return length;
 }

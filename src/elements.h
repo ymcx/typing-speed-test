@@ -17,4 +17,5 @@ Element text_timer(int time_left);
 Element text_field(vector<string> &lines, int i, string typed, int time_left);
 Element keyboard_key(char last_key, char key);
 Element keyboard(char last_key);
-Element main_ui(vector<string> &lines, int i, string typed, int time_left, char last_char);
+Element main_ui(vector<string> &lines, int i, string typed, int time_left,
+                char last_char);

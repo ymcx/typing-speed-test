@@ -18,7 +18,8 @@ int main(int argc, char *argv[]) {
   string file = argv[1];
   int time = 10;
   vector<string> lines = read_lines(file);
-  Stats stats(file, time);
+  shuffle(lines);
+  Stats stats(time);
 
   ScreenInteractive screen = ScreenInteractive::Fullscreen();
   Component popup_buttonsa = popup_buttons(stats, screen);
@@ -26,14 +27,14 @@ int main(int argc, char *argv[]) {
   Component component =
       CatchEvent(Renderer([&] {
                    if (stats.show_popup) {
-                     return popup(stats.calculate_score(), popup_buttonsa);
+                     return popup(stats.calculate_score(lines), popup_buttonsa);
                    } else {
                      return main_ui(lines, stats.line, stats.typed_text,
                                     stats.timeleft, stats.last_key);
                    }
                  }),
                  [&](Event event) {
-                   return handle_key(stats, popup_buttonsa, event, screen);
+                   return handle_key(stats, popup_buttonsa, event, screen, lines[stats.line]);
                  });
 
   atomic<bool> refresh_ui_continue = true;
