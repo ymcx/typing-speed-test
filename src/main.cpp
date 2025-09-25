@@ -26,10 +26,10 @@ int main(int argc, char *argv[]) {
   Component component =
       CatchEvent(Renderer([&] {
                    if (stats.show_popup) {
-                     return popup(stats.calculate_score(), stats, screen);
+                     return popup(stats.calculate_score(), popup_buttonsa);
                    } else {
-                     return main_uii(lines, stats.line, stats.typed_text,
-                                     stats.timeleft, stats.last_key);
+                     return main_ui(lines, stats.line, stats.typed_text,
+                                    stats.timeleft, stats.last_key);
                    }
                  }),
                  [&](Event event) {

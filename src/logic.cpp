@@ -17,7 +17,7 @@ bool decrease_time(Stats *stats) {
 
 void play_again(Stats &stats) { stats.reset(); }
 
-void close(ScreenInteractive &screen) { screen.Exit(); }
+void quit(ScreenInteractive &screen) { screen.Exit(); }
 
 bool handle_key(Stats &stats, Component &popup_buttons, Event &event,
                 ScreenInteractive &screen) {
@@ -31,7 +31,7 @@ bool handle_key(Stats &stats, Component &popup_buttons, Event &event,
     return true;
   }
   if (event == Event::Escape) {
-    close(screen);
+    quit(screen);
     return true;
   }
 

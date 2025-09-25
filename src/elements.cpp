@@ -1,15 +1,27 @@
 #include "logic.h"
+#include "misc.h"
 #include "stats.h"
 #include <ftxui/component/component.hpp>
-#include <ftxui/component/component_base.hpp>
-#include <ftxui/component/event.hpp>
-#include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <string>
 #include <vector>
 
 using namespace std;
 using namespace ftxui;
+
+Component popup_buttons(Stats &stats, ScreenInteractive &screen) {
+  Component button1 = Button("Play Again", [&] { play_again(stats); });
+  Component button2 = Button("Quit", [&] { quit(screen); });
+
+  return Container::Horizontal({button1, button2});
+}
+
+Element popup(int score, Component &buttons) {
+  Element game_over_text = text("Game Over");
+  Element score_text = text(format("Score: {}", score));
+
+  return vbox(game_over_text, score_text, buttons->Render());
+}
 
 Element text_previous_next(vector<string> &lines, int i) {
   string line = "";
@@ -38,31 +50,29 @@ Element text_current(vector<string> &lines, int i, string typed) {
 }
 
 Element text_timer(int time_left) {
-  string time_left_str = to_string(time_left);
-  return text(time_left_str) | color(Color::YellowLight);
+  return text(to_string(time_left)) | color(Color::BlueLight);
 }
 
 Element text_field(vector<string> &lines, int i, string typed, int time_left) {
   Element previous = text_previous_next(lines, i - 1);
   Element current = text_current(lines, i, typed);
   Element next = text_previous_next(lines, i + 1);
+  Element text = vbox(previous, current, next);
   Element timer = text_timer(time_left);
 
-  Element text = vbox(previous, current, next);
-  Element text_and_timer = hbox(text, timer);
-
-  return text_and_timer;
+  return hbox(text, timer);
 }
 
 Element keyboard_key(char last_key, char key) {
-  Decorator color = (last_key == key) ? bgcolor(Color::Blue) : nothing;
+  Decorator color = (last_key == key) ? bgcolor(Color::BlueLight) : nothing;
   return text(string(1, key)) | border | color;
 }
 
 Element keyboard(char last_key) {
-  vector<vector<char>> rows = {{'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O'},
-                               {'P', 'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K'},
-                               {'L', 'Z', 'X', 'C', 'V', 'B', 'N', 'M'}};
+  vector<vector<char>> rows = {
+      {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'},
+      {'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'},
+      {'Z', 'X', 'C', 'V', 'B', 'N', 'M'}};
 
   vector<Element> rows_element;
   for (vector<char> row : rows) {
@@ -76,33 +86,13 @@ Element keyboard(char last_key) {
   return vbox(rows_element);
 }
 
-Component popup_buttons(Stats &stats, ScreenInteractive &screen) {
-  Component play_again_button =
-      Button("Play Again", [&] { play_again(stats); });
-  Component quit_button = Button("Quit", [&] { close(screen); });
-
-  return Container::Horizontal({
-      play_again_button,
-      quit_button,
-  });
-}
-
-Element popup(int score, Stats &stats, ScreenInteractive &screen) {
-  Element game_over_text = text("Game over");
-  Element score_text = text(format("Score: {}", score));
-  Component buttons = popup_buttons(stats, screen);
-
-  return hbox(game_over_text, score_text, buttons->Render());
-}
-
-Element main_uii(vector<string> &lines, int i, string typed, int time_left,
-                 char last_char) {
+Element main_ui(vector<string> &lines, int i, string typed, int time_left,
+                char last_char) {
   Element top = text_field(lines, i, typed, time_left);
   Element bottom = keyboard(last_char);
 
   return vbox({
       top | border,
-      separator(),
-      bottom,
+      bottom | border,
   });
 }

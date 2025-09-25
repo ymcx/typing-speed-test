@@ -14,7 +14,7 @@ bool decrease_time(Stats *stats);
 
 void play_again(Stats &stats);
 
-void close(ScreenInteractive &screen);
+void quit(ScreenInteractive &screen);
 
 bool handle_key(Stats &stats, Component &popup_buttons, Event &event,
                 ScreenInteractive &screen);
