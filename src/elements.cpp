@@ -1,6 +1,6 @@
-#include "elements.h"
-#include "misc.h"
-#include "status.h"
+#include "src/elements.h"
+#include "src/misc.h"
+#include "src/status.h"
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <string>
@@ -20,7 +20,12 @@ Element popup(Status &status, Component &buttons) {
   Element text1 = text("Game Over");
   Element text2 = text(format("Score: {}", status.calculate_score()));
 
-  return vbox(text1, text2, buttons->Render());
+  Element hspacer = filler() | size(HEIGHT, EQUAL, 1);
+  Element wspacer = filler() | size(WIDTH, EQUAL, 1);
+  Element box = vbox(hspacer, text1, text2, buttons->Render());
+  Element window = hbox(wspacer, box) | border;
+
+  return window | size(HEIGHT, EQUAL, 7) | size(WIDTH, EQUAL, 20);
 }
 
 Element text_previous_next(Status &status, int delta) {
@@ -58,9 +63,14 @@ Element text_field(Status &status) {
   Element current = text_current(status);
   Element next = text_previous_next(status, 1);
   Element text = vbox(previous, current, next);
-  Element timer = text_timer(status);
 
-  return hbox(text, timer);
+  Element timer_not_centered = text_timer(status);
+  Element timer = vbox(filler(), timer_not_centered, filler());
+
+  Element spacer = filler() | size(WIDTH, EQUAL, 1);
+  Element field = hbox(spacer, text, filler(), separator(), spacer, timer);
+
+  return field | size(WIDTH, EQUAL, 44);
 }
 
 Element keyboard_key(Status &status, char key) {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "misc.h"
+#include "src/misc.h"
 #include <ftxui/component/screen_interactive.hpp>
 #include <string>
 #include <vector>
