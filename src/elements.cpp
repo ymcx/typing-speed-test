@@ -23,10 +23,8 @@ Element popup(int score, const Component &buttons) {
 }
 
 Element text_previous_next(const vector<string> &lines, int i) {
-  string line = "";
-  if (0 <= i && i < static_cast<int>(lines.size())) {
-    line = lines[i];
-  }
+  int total_lines = lines.size();
+  string line = lines[(i + total_lines) % total_lines];
 
   return text(line) | color(Color::GrayDark);
 }

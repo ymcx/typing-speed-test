@@ -17,34 +17,41 @@ int main(int argc, char *argv[]) {
 
   string file = argv[1];
   vector<string> lines = read_lines(file);
+  if (lines.size() == 0) {
+    return 0;
+  }
+
   shuffle_vector(lines);
   string typed = "";
-  int time_left = 60;
+  int time = 60;
+  int time_left = time;
   int line = 0;
   char last_key = '\0';
 
   ScreenInteractive screen = ScreenInteractive::Fullscreen();
 
+  int iteration = 1;
   auto pa = [&] {
-    return play_again(lines, show_popup, line, typed, last_key, time_left);
+    return play_again(lines, show_popup, line, typed, last_key, time_left,
+                      iteration, time);
   };
   auto cl = [&] { return quit(screen); };
 
   Component buttons = popup_buttons(pa, cl);
 
-  Component component =
-      CatchEvent(Renderer([&] {
-                   if (show_popup) {
-                     int score = calculate_score(lines, line, typed);
-                     return popup(score, buttons);
-                   } else {
-                     return main_ui(lines, line, typed, time_left, last_key);
-                   }
-                 }),
-                 [&](Event event) {
-                   return handle_key(buttons, event, screen, lines[line],
-                                     show_popup, typed, last_key, line);
-                 });
+  Component component = CatchEvent(
+      Renderer([&] {
+        if (show_popup) {
+          int score = calculate_score(lines, line, typed, iteration, time);
+          return popup(score, buttons);
+        } else {
+          return main_ui(lines, line, typed, time_left, last_key);
+        }
+      }),
+      [&](Event event) {
+        return handle_key(buttons, event, screen, lines[line], show_popup,
+                          typed, last_key, line, lines.size(), iteration);
+      });
 
   thread refresh_ui([&] {
     while (true) {
