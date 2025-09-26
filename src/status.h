@@ -84,7 +84,15 @@ struct Status {
     }
   }
 
-  void next_line() {
+  void add_char_space() {
+    if (next_line()) {
+      return;
+    }
+    add_char(' ');
+  }
+
+  bool next_line() {
+    bool success = false;
     if (lines[ln] == typed_string) {
       if (ln + 1 == static_cast<int>(lines.size())) {
         ++iteration;
@@ -92,9 +100,11 @@ struct Status {
 
       ln = (ln + 1) % lines.size();
       typed_string = "";
+      success = true;
     }
 
     last_char = '\0';
+    return success;
   }
 
   void delete_char() {

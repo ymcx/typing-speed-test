@@ -17,6 +17,8 @@ bool handle_key(Status &status, Event &event, Component &buttons) {
     status.quit();
   } else if (event == Event::Return) {
     status.next_line();
+  } else if (event == Event::Character(' ')) {
+    status.add_char_space();
   } else if (event.is_character()) {
     status.add_char(event.character()[0]);
   } else {

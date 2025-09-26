@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
   (void)argc;
 
   string file = argv[1];
-  int time = 3;
+  int time = 60;
   Status status(file, time);
   render(status);
 }

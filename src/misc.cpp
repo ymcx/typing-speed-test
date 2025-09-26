@@ -17,7 +17,7 @@ vector<string> compose_vector(const vector<string> &input) {
   string part;
 
   for (string new_part : input) {
-    if (part.length() + new_part.length() > 80) {
+    if (part.length() + new_part.length() > 40) {
       part.pop_back();
       output.push_back(part);
       part = "";
