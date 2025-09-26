@@ -9,9 +9,9 @@
 using namespace std;
 using namespace ftxui;
 
-void play_again(vector<string> &lines, bool &show_popup, int &line,
-                string &typed, char &last_key, int &time_left, int &iteration,
-                int time);
+void play_again(vector<string> &lines2, vector<string> &lines, bool &show_popup,
+                int &line, string &typed, char &last_key, int &time_left,
+                int &iteration, int time);
 void quit(ScreenInteractive &screen);
 void delete_char(string &typed, char &last_key);
 void next_line(string &typed, char &last_key, string line_str, int &line,

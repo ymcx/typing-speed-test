@@ -6,10 +6,27 @@
 
 using namespace std;
 
-void shuffle_vector(vector<string> &vector) {
+void shuffle_vector(vector<string> &input) {
   random_device rd;
   mt19937 g(rd());
-  shuffle(vector.begin(), vector.end(), g);
+  shuffle(input.begin(), input.end(), g);
+}
+
+vector<string> compose_vector(const vector<string> &input) {
+  vector<string> output;
+  string part;
+
+  for (string new_part : input) {
+    if (part.length() + new_part.length() > 80) {
+      part.pop_back();
+      output.push_back(part);
+      part = "";
+    }
+    part += new_part;
+    part += ' ';
+  }
+
+  return output;
 }
 
 void toupper_str(string &input) {

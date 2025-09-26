@@ -8,16 +8,17 @@
 using namespace std;
 using namespace ftxui;
 
-void play_again(vector<string> &lines, bool &show_popup, int &line,
-                string &typed, char &last_key, int &time_left, int &iteration,
-                int time) {
+void play_again(vector<string> &lines2, vector<string> &lines, bool &show_popup,
+                int &line, string &typed, char &last_key, int &time_left,
+                int &iteration, int time) {
   iteration = 1;
   line = 0;
   typed = "";
   last_key = '\0';
   time_left = time;
   show_popup = false;
-  shuffle_vector(lines);
+  shuffle_vector(lines2);
+  lines = compose_vector(lines2);
 }
 
 void quit(ScreenInteractive &screen) { screen.Exit(); }

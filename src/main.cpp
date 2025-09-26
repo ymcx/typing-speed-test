@@ -16,12 +16,13 @@ int main(int argc, char *argv[]) {
   bool show_popup = false;
 
   string file = argv[1];
-  vector<string> lines = read_lines(file);
-  if (lines.size() == 0) {
+  vector<string> lines2 = read_lines(file);
+  if (lines2.size() == 0) {
     return 0;
   }
 
-  shuffle_vector(lines);
+  shuffle_vector(lines2);
+  vector<string> lines = compose_vector(lines2);
   string typed = "";
   int time = 60;
   int time_left = time;
@@ -32,8 +33,8 @@ int main(int argc, char *argv[]) {
 
   int iteration = 1;
   auto pa = [&] {
-    return play_again(lines, show_popup, line, typed, last_key, time_left,
-                      iteration, time);
+    return play_again(lines2, lines, show_popup, line, typed, last_key,
+                      time_left, iteration, time);
   };
   auto cl = [&] { return quit(screen); };
 
