@@ -8,9 +8,9 @@
 using namespace std;
 using namespace ftxui;
 
-void play_again(vector<string> &lines2, vector<string> &lines, bool &show_popup,
-                int &line, string &typed, char &last_key, int &time_left,
-                int &iteration, int time) {
+void play_again(vector<string> &lines2, vector<string> &lines,
+                atomic<bool> &show_popup, int &line, string &typed,
+                char &last_key, int &time_left, int &iteration, int time) {
   iteration = 1;
   line = 0;
   typed = "";
@@ -21,7 +21,10 @@ void play_again(vector<string> &lines2, vector<string> &lines, bool &show_popup,
   lines = compose_vector(lines2);
 }
 
-void quit(ScreenInteractive &screen) { screen.Exit(); }
+void quit(ScreenInteractive &screen, atomic<bool> &exitt) {
+  exitt = true;
+  screen.Exit();
+}
 
 void delete_char(string &typed, char &last_key) {
   if (!typed.empty()) {
@@ -54,9 +57,10 @@ void add_char(string &typed, char &last_key, int line_len, Event &event) {
 }
 
 bool handle_key(Component &popup_buttons, Event &event,
-                ScreenInteractive &screen, string line_str, bool show_popup,
-                string &typed, char &last_key, int &line, int total_lines,
-                int &iteration) {
+                ScreenInteractive &screen, string line_str,
+                atomic<bool> &show_popup, string &typed, char &last_key,
+                int &line, int total_lines, int &iteration,
+                atomic<bool> &exitt) {
   if (show_popup) {
     return popup_buttons->OnEvent(event);
   }
@@ -66,7 +70,7 @@ bool handle_key(Component &popup_buttons, Event &event,
   if (event == Event::Backspace) {
     delete_char(typed, last_key);
   } else if (event == Event::Escape) {
-    quit(screen);
+    quit(screen, exitt);
   } else if (event == Event::Return) {
     next_line(typed, last_key, line_str, line, total_lines, iteration);
   } else if (event.is_character()) {

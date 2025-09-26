@@ -9,15 +9,16 @@
 using namespace std;
 using namespace ftxui;
 
-void play_again(vector<string> &lines2, vector<string> &lines, bool &show_popup,
-                int &line, string &typed, char &last_key, int &time_left,
-                int &iteration, int time);
-void quit(ScreenInteractive &screen);
+void play_again(vector<string> &lines2, vector<string> &lines,
+                atomic<bool> &show_popup, int &line, string &typed,
+                char &last_key, int &time_left, int &iteration, int time);
+void quit(ScreenInteractive &screen, atomic<bool> &exitt);
 void delete_char(string &typed, char &last_key);
 void next_line(string &typed, char &last_key, string line_str, int &line,
                int total_lines, int &iteration);
 void add_char(string &typed, char &last_key, int line_len, Event &event);
 bool handle_key(Component &popup_buttons, Event &event,
-                ScreenInteractive &screen, string line_str, bool show_popup,
-                string &typed, char &last_key, int &line, int total_lines,
-                int &iteration);
+                ScreenInteractive &screen, string line_str,
+                atomic<bool> &show_popup, string &typed, char &last_key,
+                int &line, int total_lines, int &iteration,
+                atomic<bool> &exitt);
