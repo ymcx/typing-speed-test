@@ -8,7 +8,7 @@ using namespace std;
 using namespace ftxui;
 
 Component popup_buttons(Status &status);
-Element popup(int score, const Component &buttons);
+Element popup(Status &status, int score);
 Element text_previous_next(Status &status, int delta);
 Element text_current(Status &status);
 Element text_timer(Status &status);

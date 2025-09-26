@@ -16,23 +16,22 @@ Component popup_buttons(Status &status) {
   return Container::Horizontal({button1, button2});
 }
 
-Element popup(int score, const Component &buttons) {
+Element popup(Status &status, int score) {
   Element text1 = text("Game Over");
   Element text2 = text(format("Score: {}", score));
 
-  return vbox(text1, text2, buttons->Render());
+  return vbox(text1, text2, popup_buttons(status)->Render());
 }
 
 Element text_previous_next(Status &status, int delta) {
-  int total_lines = status.game_lines.size();
-  string line =
-      status.game_lines[(status.on_line + delta + total_lines) % total_lines];
+  int total_lines = status.lines.size();
+  string line = status.lines[(status.ln + delta + total_lines) % total_lines];
 
   return text(line) | color(Color::GrayDark);
 }
 
 Element text_current(Status &status) {
-  string line = status.game_lines[status.on_line];
+  string line = status.lines[status.ln];
 
   int correct_amount = common_prefix_length(status.typed_string, line);
   int typed_amount = status.typed_string.length();
