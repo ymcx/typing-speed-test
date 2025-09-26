@@ -114,4 +114,10 @@ struct Status {
 
     last_char = '\0';
   }
+
+  void delete_word() {
+    do {
+      delete_char();
+    } while (typed_string.length() > 0 && typed_string.back() != ' ');
+  }
 };

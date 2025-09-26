@@ -13,6 +13,8 @@ bool handle_key(Status &status, Event &event, Component &buttons) {
 
   if (event == Event::Backspace) {
     status.delete_char();
+  } else if (event == Event::Special({27, 127})) {
+    status.delete_word();
   } else if (event == Event::Escape) {
     status.quit();
   } else if (event == Event::Return) {
