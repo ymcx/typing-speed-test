@@ -18,6 +18,7 @@ struct Status {
   int time_left = 0;
   int original_time = 0;
   int ln = 0;
+  bool game_on = true;
   bool popup_shown = false;
   bool last_char_correct = true;
 
@@ -35,7 +36,10 @@ struct Status {
 
   void set_last_char_correct(int a, int b) { last_char_correct = (a == b); }
 
-  void quit() { screen.Exit(); }
+  void quit() {
+    screen.Exit();
+    game_on = false;
+  }
 
   void refresh() { screen.Post(Event::Custom); }
 

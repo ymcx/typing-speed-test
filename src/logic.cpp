@@ -31,7 +31,7 @@ bool handle_key(Status &status, Event &event, Component &buttons) {
 }
 
 void timer_loop(Status &status) {
-  while (true) {
+  while (status.game_on) {
     if (!status.popup_shown) {
       this_thread::sleep_for(chrono::seconds(1));
       status.decrease_time();
