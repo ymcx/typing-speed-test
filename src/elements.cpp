@@ -1,5 +1,6 @@
 #include "elements.h"
 #include "misc.h"
+#include "status.h"
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <string>
@@ -8,9 +9,9 @@
 using namespace std;
 using namespace ftxui;
 
-Component popup_buttons(function<void()> play_again, function<void()> quit) {
-  Component button1 = Button("Play Again", play_again);
-  Component button2 = Button("Quit", quit);
+Component popup_buttons(Status &status) {
+  Component button1 = Button("Play Again", [&] { status.play_again(); });
+  Component button2 = Button("Quit", [&] { status.quit(); });
 
   return Container::Horizontal({button1, button2});
 }
@@ -22,19 +23,19 @@ Element popup(int score, const Component &buttons) {
   return vbox(text1, text2, buttons->Render());
 }
 
-Element text_previous_next(const vector<string> &lines, int i) {
-  int total_lines = lines.size();
-  string line = lines[(i + total_lines) % total_lines];
+Element text_previous_next(Status &status, int delta) {
+  int total_lines = status.game_lines.size();
+  string line =
+      status.game_lines[(status.on_line + delta + total_lines) % total_lines];
 
   return text(line) | color(Color::GrayDark);
 }
 
-Element text_current(const vector<string> &lines, int i, string typed,
-                     bool &last_key_correct) {
-  string line = lines[i];
+Element text_current(Status &status) {
+  string line = status.game_lines[status.on_line];
 
-  int correct_amount = common_prefix_length(typed, line);
-  int typed_amount = typed.length();
+  int correct_amount = common_prefix_length(status.typed_string, line);
+  int typed_amount = status.typed_string.length();
 
   string correct = line.substr(0, correct_amount);
   string wrong = line.substr(correct_amount, typed_amount - correct_amount);
@@ -44,30 +45,29 @@ Element text_current(const vector<string> &lines, int i, string typed,
   Element text2 = text(wrong) | color(Color::Red);
   Element text3 = text(future) | color(Color::GrayLight);
 
-  last_key_correct = (typed_amount == correct_amount);
+  status.set_last_char_correct(typed_amount, correct_amount);
 
   return hbox(text1, text2, text3);
 }
 
-Element text_timer(int time_left) {
-  return text(to_string(time_left)) | color(Color::Blue);
+Element text_timer(Status &status) {
+  return text(to_string(status.time_left)) | color(Color::Blue);
 }
 
-Element text_field(const vector<string> &lines, int i, string typed,
-                   int time_left, bool &last_key_correct) {
-  Element previous = text_previous_next(lines, i - 1);
-  Element current = text_current(lines, i, typed, last_key_correct);
-  Element next = text_previous_next(lines, i + 1);
+Element text_field(Status &status) {
+  Element previous = text_previous_next(status, -1);
+  Element current = text_current(status);
+  Element next = text_previous_next(status, 1);
   Element text = vbox(previous, current, next);
-  Element timer = text_timer(time_left);
+  Element timer = text_timer(status);
 
   return hbox(text, timer);
 }
 
-Element keyboard_key(char last_key, char key, bool last_key_correct) {
+Element keyboard_key(Status &status, char key) {
   Decorator color = nothing;
-  if (last_key == key) {
-    if (last_key_correct) {
+  if (status.last_char == key) {
+    if (status.last_char_correct) {
       color = bgcolor(Color::Blue);
     } else {
       color = bgcolor(Color::Red);
@@ -77,7 +77,7 @@ Element keyboard_key(char last_key, char key, bool last_key_correct) {
   return text(string(1, key)) | border | color;
 }
 
-Element keyboard(char last_key, bool last_key_correct) {
+Element keyboard(Status &status) {
   vector<vector<char>> rows = {
       {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'},
       {'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'},
@@ -87,7 +87,7 @@ Element keyboard(char last_key, bool last_key_correct) {
   for (vector<char> row : rows) {
     vector<Element> row_element;
     for (char key : row) {
-      row_element.push_back(keyboard_key(last_key, key, last_key_correct));
+      row_element.push_back(keyboard_key(status, key));
     }
     rows_element.push_back(hbox(row_element));
   }
@@ -95,12 +95,9 @@ Element keyboard(char last_key, bool last_key_correct) {
   return vbox(rows_element);
 }
 
-Element main_ui(const vector<string> &lines, int i, string typed, int time_left,
-                char last_key) {
-  bool last_key_correct = true;
-
-  Element element1 = text_field(lines, i, typed, time_left, last_key_correct);
-  Element element2 = keyboard(last_key, last_key_correct);
+Element main_ui(Status &status) {
+  Element element1 = text_field(status);
+  Element element2 = keyboard(status);
 
   return vbox({
       element1 | border,

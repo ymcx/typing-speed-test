@@ -67,30 +67,3 @@ int common_prefix_length(string a, string b) {
 
   return length;
 }
-
-int calculate_score(const vector<string> &lines, int line, string typed,
-                    int iteration, int time) {
-  int characters = 0;
-  for (int i = 0; i < static_cast<int>(lines.size()); ++i) {
-    int len = lines[i].length();
-    if (i < line) {
-      characters += len * iteration;
-    } else {
-      characters += len * (iteration - 1);
-    }
-  }
-
-  characters += common_prefix_length(typed, lines[line]);
-  int score = 60 * characters / time;
-
-  return score;
-}
-
-bool decrease_time(int &time_left) {
-  if (time_left > 0) {
-    --time_left;
-    return true;
-  }
-
-  return false;
-}
