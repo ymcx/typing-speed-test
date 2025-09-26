@@ -103,3 +103,12 @@ Element main_ui(Status &status) {
       element2 | border,
   });
 }
+
+Element main_screen(Status &status) {
+  if (status.popup_shown) {
+    int score = status.calculate_score();
+    return popup(status, score);
+  } else {
+    return main_ui(status);
+  }
+}

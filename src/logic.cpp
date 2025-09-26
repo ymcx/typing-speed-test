@@ -1,6 +1,10 @@
 #include "src/logic.h"
 #include "src/elements.h"
 #include "src/status.h"
+#include <ftxui/component/component.hpp>
+#include <ftxui/component/event.hpp>
+
+using namespace ftxui;
 
 bool handle_key(Status &status, Event &event) {
   if (status.popup_shown) {
@@ -32,28 +36,10 @@ void timer_loop(Status &status) {
   }
 }
 
-Element render(Status &status) {
-  if (status.popup_shown) {
-    int score = status.calculate_score();
-    return popup(status, score);
-  } else {
-    return main_ui(status);
-  }
-}
-
-Component get_child(Status &status) {
-  return Renderer([&] { return render(status); });
-}
-
-Component get_component(Status &status) {
-  Component component = CatchEvent(get_child(status), [&](Event event) {
-    return handle_key(status, event);
-  });
-  return component;
-}
-
-void renderi(Status &status) {
-  Component component = get_component(status);
+void render(Status &status) {
+  Component component =
+      CatchEvent(Renderer([&] { return main_screen(status); }),
+                 [&](Event event) { return handle_key(status, event); });
   thread refresh_ui([&] { timer_loop(status); });
   status.screen.Loop(component);
   refresh_ui.join();

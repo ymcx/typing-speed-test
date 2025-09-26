@@ -4,7 +4,6 @@
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
 
-using namespace std;
 using namespace ftxui;
 
 Component popup_buttons(Status &status);
@@ -16,3 +15,4 @@ Element text_field(Status &status);
 Element keyboard_key(Status &status, char key);
 Element keyboard(Status &status);
 Element main_ui(Status &status);
+Element main_screen(Status &status);
