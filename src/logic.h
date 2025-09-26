@@ -16,7 +16,7 @@ void quit(ScreenInteractive &screen);
 void delete_char(string &typed, char &last_key);
 void next_line(string &typed, char &last_key, string line_str, int &line,
                int total_lines, int &iteration);
-void add_char(string &typed, char &last_key, Event &event);
+void add_char(string &typed, char &last_key, int line_len, Event &event);
 bool handle_key(Component &popup_buttons, Event &event,
                 ScreenInteractive &screen, string line_str, bool show_popup,
                 string &typed, char &last_key, int &line, int total_lines,

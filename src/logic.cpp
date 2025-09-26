@@ -42,10 +42,14 @@ void next_line(string &typed, char &last_key, string line_str, int &line,
   last_key = '\0';
 }
 
-void add_char(string &typed, char &last_key, Event &event) {
+void add_char(string &typed, char &last_key, int line_len, Event &event) {
   char c = event.character()[0];
-  typed += c;
-  last_key = toupper(c);
+  if (static_cast<int>(typed.length()) < line_len) {
+    typed += c;
+    last_key = toupper(c);
+  } else {
+    last_key = '\0';
+  }
 }
 
 bool handle_key(Component &popup_buttons, Event &event,
@@ -56,6 +60,8 @@ bool handle_key(Component &popup_buttons, Event &event,
     return popup_buttons->OnEvent(event);
   }
 
+  int line_len = line_str.length();
+
   if (event == Event::Backspace) {
     delete_char(typed, last_key);
   } else if (event == Event::Escape) {
@@ -63,7 +69,7 @@ bool handle_key(Component &popup_buttons, Event &event,
   } else if (event == Event::Return) {
     next_line(typed, last_key, line_str, line, total_lines, iteration);
   } else if (event.is_character()) {
-    add_char(typed, last_key, event);
+    add_char(typed, last_key, line_len, event);
   } else {
     return false;
   }
