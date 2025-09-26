@@ -12,6 +12,16 @@ void shuffle_vector(vector<string> &vector) {
   shuffle(vector.begin(), vector.end(), g);
 }
 
+void toupper_str(string &input) {
+  transform(input.begin(), input.end(), input.begin(),
+            [](unsigned char c) { return toupper(c); });
+}
+
+void tolower_str(string &input) {
+  transform(input.begin(), input.end(), input.begin(),
+            [](unsigned char c) { return tolower(c); });
+}
+
 vector<string> read_lines(string path) {
   vector<string> lines;
   string line;
@@ -19,6 +29,7 @@ vector<string> read_lines(string path) {
 
   if (file.is_open()) {
     while (getline(file, line)) {
+      tolower_str(line);
       lines.push_back(line);
     }
     file.close();
