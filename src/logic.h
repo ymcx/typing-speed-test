@@ -5,6 +5,6 @@
 
 using namespace ftxui;
 
-bool handle_key(Status &status, Event &event);
+bool handle_key(Status &status, Event &event, Component &buttons);
 void timer_loop(Status &status);
 void render(Status &status);

@@ -16,16 +16,17 @@ Component popup_buttons(Status &status) {
   return Container::Horizontal({button1, button2});
 }
 
-Element popup(Status &status, int score) {
+Element popup(Status &status, Component &buttons) {
   Element text1 = text("Game Over");
-  Element text2 = text(format("Score: {}", score));
+  Element text2 = text(format("Score: {}", status.calculate_score()));
 
-  return vbox(text1, text2, popup_buttons(status)->Render());
+  return vbox(text1, text2, buttons->Render());
 }
 
 Element text_previous_next(Status &status, int delta) {
-  int total_lines = status.lines.size();
-  string line = status.lines[(status.ln + delta + total_lines) % total_lines];
+  int lines = status.lines.size();
+  int ln = (status.ln + delta + lines) % lines;
+  string line = status.lines[ln];
 
   return text(line) | color(Color::GrayDark);
 }
@@ -35,6 +36,7 @@ Element text_current(Status &status) {
 
   int correct_amount = common_prefix_length(status.typed_string, line);
   int typed_amount = status.typed_string.length();
+  status.set_last_char_correct(typed_amount, correct_amount);
 
   string correct = line.substr(0, correct_amount);
   string wrong = line.substr(correct_amount, typed_amount - correct_amount);
@@ -44,13 +46,11 @@ Element text_current(Status &status) {
   Element text2 = text(wrong) | color(Color::Red);
   Element text3 = text(future) | color(Color::GrayLight);
 
-  status.set_last_char_correct(typed_amount, correct_amount);
-
   return hbox(text1, text2, text3);
 }
 
 Element text_timer(Status &status) {
-  return text(to_string(status.time_left)) | color(Color::Blue);
+  return text(to_string(status.time_left)) | color(Color::BlueLight);
 }
 
 Element text_field(Status &status) {
@@ -77,21 +77,21 @@ Element keyboard_key(Status &status, char key) {
 }
 
 Element keyboard(Status &status) {
-  vector<vector<char>> rows = {
+  vector<vector<char>> layout_rows = {
       {'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'},
       {'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'},
       {'Z', 'X', 'C', 'V', 'B', 'N', 'M'}};
 
-  vector<Element> rows_element;
-  for (vector<char> row : rows) {
-    vector<Element> row_element;
-    for (char key : row) {
-      row_element.push_back(keyboard_key(status, key));
+  vector<Element> rows;
+  for (vector<char> layout_row : layout_rows) {
+    vector<Element> row;
+    for (char layout_key : layout_row) {
+      row.push_back(keyboard_key(status, layout_key));
     }
-    rows_element.push_back(hbox(row_element));
+    rows.push_back(hbox(row));
   }
 
-  return vbox(rows_element);
+  return vbox(rows);
 }
 
 Element main_ui(Status &status) {
@@ -102,13 +102,4 @@ Element main_ui(Status &status) {
       element1 | border,
       element2 | border,
   });
-}
-
-Element main_screen(Status &status) {
-  if (status.popup_shown) {
-    int score = status.calculate_score();
-    return popup(status, score);
-  } else {
-    return main_ui(status);
-  }
 }

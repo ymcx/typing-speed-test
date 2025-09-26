@@ -6,9 +6,9 @@
 
 using namespace ftxui;
 
-bool handle_key(Status &status, Event &event) {
+bool handle_key(Status &status, Event &event, Component &buttons) {
   if (status.popup_shown) {
-    return popup_buttons(status)->OnEvent(event);
+    return buttons->OnEvent(event);
   }
 
   if (event == Event::Backspace) {
@@ -29,7 +29,7 @@ bool handle_key(Status &status, Event &event) {
 void timer_loop(Status &status) {
   while (true) {
     if (!status.popup_shown) {
-      this_thread::sleep_for(std::chrono::seconds(1));
+      this_thread::sleep_for(chrono::seconds(1));
       status.decrease_time();
       status.refresh();
     }
@@ -37,10 +37,14 @@ void timer_loop(Status &status) {
 }
 
 void render(Status &status) {
-  Component component =
-      CatchEvent(Renderer([&] { return main_screen(status); }),
-                 [&](Event event) { return handle_key(status, event); });
+  Component buttons = popup_buttons(status);
+  Component ui = CatchEvent(
+      Renderer([&] {
+        return (status.popup_shown) ? popup(status, buttons) : main_ui(status);
+      }),
+      [&](Event event) { return handle_key(status, event, buttons); });
   thread refresh_ui([&] { timer_loop(status); });
-  status.screen.Loop(component);
+
+  status.screen.Loop(ui);
   refresh_ui.join();
 }
