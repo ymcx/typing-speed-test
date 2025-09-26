@@ -5,7 +5,11 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-  (void)argc;
+  if (argc < 2) {
+    cout << "You need to pass a text file as an argument." << endl;
+    cout << "Each word needs to be on their own line." << endl;
+    return 0;
+  }
 
   string file = argv[1];
   int time = 60;
