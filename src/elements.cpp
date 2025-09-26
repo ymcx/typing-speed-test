@@ -3,11 +3,15 @@
 #include "src/status.h"
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
+#include <ranges>
 #include <string>
 #include <vector>
 
 using namespace std;
 using namespace ftxui;
+
+const Element hspacer = filler() | size(WIDTH, EQUAL, 1);
+const Element vspacer = filler() | size(HEIGHT, EQUAL, 1);
 
 Component popup_buttons(Status &status) {
   Component button1 = Button("Play Again", [&] { status.play_again(); });
@@ -20,10 +24,8 @@ Element popup(Status &status, Component &buttons) {
   Element text1 = text("Game Over");
   Element text2 = text(format("Score: {}", status.calculate_score()));
 
-  Element hspacer = filler() | size(HEIGHT, EQUAL, 1);
-  Element wspacer = filler() | size(WIDTH, EQUAL, 1);
-  Element box = vbox(hspacer, text1, text2, buttons->Render());
-  Element window = hbox(wspacer, box) | border;
+  Element box = vbox(vspacer, text1, text2, buttons->Render());
+  Element window = hbox(hspacer, box) | border;
 
   return window | size(HEIGHT, EQUAL, 7) | size(WIDTH, EQUAL, 20);
 }
@@ -55,22 +57,23 @@ Element text_current(Status &status) {
 }
 
 Element text_timer(Status &status) {
-  return text(to_string(status.time_left)) | color(Color::BlueLight);
+  Element timer = text(to_string(status.time_left)) | color(Color::BlueLight);
+
+  timer = vbox(vspacer, timer, vspacer);
+  timer = hbox(hspacer, timer, hspacer);
+
+  return timer | border;
 }
 
 Element text_field(Status &status) {
   Element previous = text_previous_next(status, -1);
-  Element current = text_current(status);
+  Element text = text_current(status);
   Element next = text_previous_next(status, 1);
-  Element text = vbox(previous, current, next);
 
-  Element timer_not_centered = text_timer(status);
-  Element timer = vbox(filler(), timer_not_centered, filler());
+  text = vbox(previous, text, next);
+  text = hbox(hspacer, text, hspacer);
 
-  Element spacer = filler() | size(WIDTH, EQUAL, 1);
-  Element field = hbox(spacer, text, filler(), separator(), spacer, timer);
-
-  return field | size(WIDTH, EQUAL, 44);
+  return text | border;
 }
 
 Element keyboard_key(Status &status, char key) {
@@ -93,23 +96,22 @@ Element keyboard(Status &status) {
       {'Z', 'X', 'C', 'V', 'B', 'N', 'M'}};
 
   vector<Element> rows;
-  for (vector<char> layout_row : layout_rows) {
+  for (auto [i, layout_row] : views::enumerate(layout_rows)) {
     vector<Element> row;
     for (char layout_key : layout_row) {
       row.push_back(keyboard_key(status, layout_key));
     }
-    rows.push_back(hbox(row));
+    rows.push_back(hbox(row) | center);
   }
 
-  return vbox(rows);
+  Element keyboard = hbox(hspacer, vbox(rows), hspacer);
+  return keyboard | border | size(WIDTH, EQUAL, 32);
 }
 
 Element main_ui(Status &status) {
   Element element1 = text_field(status);
-  Element element2 = keyboard(status);
+  Element element2 = text_timer(status);
+  Element element3 = keyboard(status);
 
-  return vbox({
-      element1 | border,
-      element2 | border,
-  });
+  return vbox(hbox(element1, element2), element3);
 }
