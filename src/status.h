@@ -1,6 +1,7 @@
 #pragma once
 
 #include "misc.h"
+#include <atomic>
 #include <ftxui/component/screen_interactive.hpp>
 #include <string>
 #include <vector>
@@ -19,7 +20,7 @@ struct Status {
   int original_time = 0;
   int ln = 0;
   bool timer_off = true;
-  bool exit_game = false;
+  atomic<bool> exit_game = false;
   bool popup_shown = false;
   bool last_char_correct = true;
 
