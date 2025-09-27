@@ -1,4 +1,4 @@
-#include "src/misc.h"
+#include "misc.h"
 #include <fstream>
 #include <random>
 #include <string>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "src/status.h"
+#include "status.h"
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
 

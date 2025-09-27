@@ -1,6 +1,6 @@
-#include "src/elements.h"
-#include "src/misc.h"
-#include "src/status.h"
+#include "elements.h"
+#include "misc.h"
+#include "status.h"
 #include <ftxui/component/component.hpp>
 #include <ftxui/dom/elements.hpp>
 #include <ranges>
@@ -24,10 +24,10 @@ Element popup(Status &status, Component &buttons) {
   Element text1 = text("Game Over");
   Element text2 = text(format("Score: {}", status.calculate_score()));
 
-  Element box = vbox(vspacer, text1, text2, buttons->Render());
+  Element box = vbox(vspacer, text1, text2, vspacer, buttons->Render());
   Element window = hbox(hspacer, box) | border;
 
-  return window | size(HEIGHT, EQUAL, 7) | size(WIDTH, EQUAL, 20);
+  return window | size(HEIGHT, EQUAL, 8) | size(WIDTH, EQUAL, 20);
 }
 
 Element text_previous_next(Status &status, int delta) {
@@ -57,7 +57,8 @@ Element text_current(Status &status) {
 }
 
 Element text_timer(Status &status) {
-  Element timer = text(to_string(status.time_left)) | color(Color::BlueLight);
+  string time_left = to_string(status.time_left + 1);
+  Element timer = text(time_left) | color(Color::BlueLight);
 
   timer = vbox(vspacer, timer, vspacer);
   timer = hbox(hspacer, timer, hspacer);

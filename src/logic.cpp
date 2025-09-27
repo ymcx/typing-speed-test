@@ -1,6 +1,6 @@
-#include "src/logic.h"
-#include "src/elements.h"
-#include "src/status.h"
+#include "logic.h"
+#include "elements.h"
+#include "status.h"
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/event.hpp>
 
@@ -33,9 +33,9 @@ bool handle_key(Status &status, Event &event, Component &buttons) {
 void timer_loop(Status &status) {
   while (status.game_on) {
     if (!status.popup_shown) {
-      this_thread::sleep_for(chrono::seconds(1));
       status.decrease_time();
       status.refresh();
+      this_thread::sleep_for(chrono::seconds(1));
     }
   }
 }

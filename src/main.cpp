@@ -1,5 +1,5 @@
-#include "src/logic.h"
-#include "src/status.h"
+#include "logic.h"
+#include "status.h"
 #include <string>
 
 using namespace std;

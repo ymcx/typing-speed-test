@@ -1,6 +1,6 @@
 #pragma once
 
-#include "src/status.h"
+#include "status.h"
 #include <ftxui/component/event.hpp>
 
 using namespace ftxui;

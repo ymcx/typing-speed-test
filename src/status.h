@@ -1,6 +1,6 @@
 #pragma once
 
-#include "src/misc.h"
+#include "misc.h"
 #include <ftxui/component/screen_interactive.hpp>
 #include <string>
 #include <vector>
@@ -74,7 +74,7 @@ struct Status {
     }
 
     characters += common_prefix_length(typed_string, lines[ln]);
-    int score = 60 * characters / original_time;
+    int score = 60 * characters / (original_time - time_left);
 
     return score;
   }
