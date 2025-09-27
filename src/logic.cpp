@@ -31,8 +31,8 @@ bool handle_key(Status &status, Event &event, Component &buttons) {
 }
 
 void timer_loop(Status &status) {
-  while (true) {
-    if (status.game_on) {
+  while (!status.exit_game) {
+    if (!status.timer_off) {
       this_thread::sleep_for(chrono::seconds(1));
       status.decrease_time();
       status.refresh();
@@ -50,5 +50,6 @@ void render(Status &status) {
   thread refresh_ui([&] { timer_loop(status); });
 
   status.screen.Loop(ui);
+  status.exit_game = true;
   refresh_ui.join();
 }

@@ -18,7 +18,8 @@ struct Status {
   int time_left = 0;
   int original_time = 0;
   int ln = 0;
-  bool game_on = false;
+  bool timer_off = true;
+  bool exit_game = false;
   bool popup_shown = false;
   bool last_char_correct = true;
 
@@ -49,7 +50,7 @@ struct Status {
   }
 
   void show_popup() {
-    game_on = false;
+    timer_off = true;
     popup_shown = true;
   }
 
@@ -85,7 +86,7 @@ struct Status {
   }
 
   void add_char(char c) {
-    game_on = true;
+    timer_off = false;
     if (typed_string.length() < lines[ln].length()) {
       typed_string += c;
       last_char = toupper(c);
