@@ -14,12 +14,6 @@ A typing speed test game, now in your terminal!
 sudo apt install libftxui-dev
 ```
 
-#### Arch
-
-```
-yay -S ftxui
-```
-
 #### Fedora
 
 ```
