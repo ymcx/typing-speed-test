@@ -2,6 +2,8 @@
 
 A typing speed test game, now in your terminal!
 
+![Screenshot](./assets/screenshot.png)
+
 # Installition
 
 ### Dependencies
@@ -9,7 +11,7 @@ A typing speed test game, now in your terminal!
 #### Ubuntu
 
 ```
-sudo apt install ftxui-dev
+sudo apt install libftxui-dev
 ```
 
 #### Arch
