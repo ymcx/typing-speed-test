@@ -72,7 +72,7 @@ Element text_field(Status &status) {
   Element next = text_previous_next(status, 1);
 
   text = vbox(previous, text, next);
-  text = hbox(hspacer, text, hspacer);
+  text = hbox(hspacer, text) | size(WIDTH, EQUAL, 42);
 
   return text | border;
 }
