@@ -57,7 +57,7 @@ Element text_current(Status &status) {
 }
 
 Element text_timer(Status &status) {
-  string time_left = to_string(status.time_left + 1);
+  string time_left = to_string(status.time_left);
   Element timer = text(time_left) | color(Color::BlueLight);
 
   timer = vbox(vspacer, timer, vspacer);

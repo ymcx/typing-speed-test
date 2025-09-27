@@ -18,7 +18,7 @@ struct Status {
   int time_left = 0;
   int original_time = 0;
   int ln = 0;
-  bool game_on = true;
+  bool game_on = false;
   bool popup_shown = false;
   bool last_char_correct = true;
 
@@ -36,10 +36,7 @@ struct Status {
 
   void set_last_char_correct(int a, int b) { last_char_correct = (a == b); }
 
-  void quit() {
-    screen.Exit();
-    game_on = false;
-  }
+  void quit() { screen.Exit(); }
 
   void refresh() { screen.Post(Event::Custom); }
 
@@ -47,9 +44,16 @@ struct Status {
     if (time_left > 0) {
       --time_left;
     } else {
-      popup_shown = true;
+      show_popup();
     }
   }
+
+  void show_popup() {
+    game_on = false;
+    popup_shown = true;
+  }
+
+  void hide_popup() { popup_shown = false; }
 
   void play_again() {
     lines = shuffle_lines();
@@ -58,8 +62,9 @@ struct Status {
     iteration = 1;
     time_left = original_time;
     ln = 0;
-    popup_shown = false;
     last_char_correct = true;
+
+    hide_popup();
   }
 
   int calculate_score() {
@@ -74,12 +79,13 @@ struct Status {
     }
 
     characters += common_prefix_length(typed_string, lines[ln]);
-    int score = 60 * characters / (original_time - time_left);
+    int score = 60 * characters / original_time;
 
     return score;
   }
 
   void add_char(char c) {
+    game_on = true;
     if (typed_string.length() < lines[ln].length()) {
       typed_string += c;
       last_char = toupper(c);

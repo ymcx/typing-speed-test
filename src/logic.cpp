@@ -16,7 +16,7 @@ bool handle_key(Status &status, Event &event, Component &buttons) {
   } else if (event == Event::Special({27, 127})) {
     status.delete_word();
   } else if (event == Event::Escape) {
-    status.popup_shown = true;
+    status.show_popup();
   } else if (event == Event::Return) {
     status.next_line();
   } else if (event == Event::Character(' ')) {
@@ -31,11 +31,11 @@ bool handle_key(Status &status, Event &event, Component &buttons) {
 }
 
 void timer_loop(Status &status) {
-  while (status.game_on) {
-    if (!status.popup_shown) {
+  while (true) {
+    if (status.game_on) {
+      this_thread::sleep_for(chrono::seconds(1));
       status.decrease_time();
       status.refresh();
-      this_thread::sleep_for(chrono::seconds(1));
     }
   }
 }
