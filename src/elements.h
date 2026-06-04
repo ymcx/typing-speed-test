@@ -7,11 +7,11 @@
 using namespace ftxui;
 
 Component popup_buttons(Status &status);
-Element popup(Status &status, Component &buttons);
-Element text_previous_next(Status &status, int delta);
+Element popup(Status &status, const Component &buttons);
+Element text_previous_next(Status &status, const int delta);
 Element text_current(Status &status);
 Element text_timer(Status &status);
 Element text_field(Status &status);
-Element keyboard_key(Status &status, char key);
+Element keyboard_key(Status &status, const char key);
 Element keyboard(Status &status);
 Element main_ui(Status &status);

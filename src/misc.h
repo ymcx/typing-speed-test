@@ -5,6 +5,8 @@
 
 using namespace std;
 
+constexpr int LINE_WIDTH = 50;
+
 void shuffle_vector(vector<string> &input);
 vector<string> compose_vector(const vector<string> &input);
 void toupper_str(string &input);
